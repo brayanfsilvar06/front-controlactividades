@@ -1,3 +1,4 @@
+import { GestionAuthService } from './../../Services/gestion-auth.service';
 
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -85,6 +86,7 @@ export class CtrlactividadComponent implements OnInit {
   constructor(private restActividadService: RestActividadService,
     private restPersonaService: RestPersonaService,
     private restAuthApi: RestAuthapiService,
+    private gestionAuthService: GestionAuthService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService) {
     this.actividades = [];
@@ -127,7 +129,7 @@ export class CtrlactividadComponent implements OnInit {
         if (responseAuth !== null && responseAuth !== undefined) {
           if (responseAuth.bRta) {
             this.showSpinner = false;
-            sessionStorage.setItem('sToken', 'Bearer' + responseAuth.sToken);
+            this.gestionAuthService.gestionarSesionUsuarioApp(responseAuth);
           } else {
             this.showSpinner = false;
             this.messageService.add({ severity: 'warn', summary: '¡ALERTA!', detail: responseAuth.sMsg, key: 'msg', life: 10000 });
@@ -147,7 +149,7 @@ export class CtrlactividadComponent implements OnInit {
   obtenerEstadoActividades() {
     this.messageService.clear();
     this.estadoActividades = [];
-    let sToken = sessionStorage.getItem('sToken');
+    let sToken = this.gestionAuthService.obtenerToken();
     this.restActividadService.listadoEstadoActividades(sToken).subscribe(
       (responseActividades: ResponseActividades) => {
         if (responseActividades !== null && responseActividades !== undefined) {
@@ -170,7 +172,7 @@ export class CtrlactividadComponent implements OnInit {
   obtenerEmpleados() {
     this.messageService.clear();
     this.empleados = [];
-    let sToken = sessionStorage.getItem('sToken');
+    let sToken = this.gestionAuthService.obtenerToken();
     this.restPersonaService.listadoEmpleados(sToken).subscribe(
       (responsePersona: ResponsePersona) => {
         if (responsePersona !== null && responsePersona !== undefined) {
@@ -197,7 +199,7 @@ export class CtrlactividadComponent implements OnInit {
   obtenerActividades() {
     this.messageService.clear();
     this.actividades = [];
-    let sToken = sessionStorage.getItem('sToken');
+    let sToken = this.gestionAuthService.obtenerToken();
     this.restActividadService.listadoActividades(sToken).subscribe(
       (actividades: Actividad[]) => {
         if (actividades !== null && actividades !== undefined && actividades.length > 0) {
@@ -247,7 +249,7 @@ export class CtrlactividadComponent implements OnInit {
       modificarActividad.LMarcaTiempoEjecucionEstimada = lMarcaTiempoEjecucionEstimada;
       modificarActividad.IPersonaAsignada = { ICodigo: this.selectedEmpleado };
       modificarActividad.IEstadoActividad = { ICodigo: this.selectedEstadoActividad, CDescripcion: '' };
-      let sToken = sessionStorage.getItem('sToken');
+      let sToken = this.gestionAuthService.obtenerToken();
       this.restActividadService.actualizarActividad(sToken, modificarActividad).subscribe(
         (responseGenerico: ResponseGenerico) => {
           if (responseGenerico !== null && responseGenerico !== undefined) {
@@ -279,7 +281,7 @@ export class CtrlactividadComponent implements OnInit {
     this.messageService.clear();
     this.showSpinner = true;
     if (selectedActividad !== null && selectedActividad !== undefined && selectedActividad.ICodigo !== null && selectedActividad.ICodigo !== undefined) {
-      let sToken = sessionStorage.getItem('sToken');
+      let sToken = this.gestionAuthService.obtenerToken();
       this.restActividadService.eliminarActividad(sToken, selectedActividad).subscribe(
         (responseGenerico: ResponseGenerico) => {
           if (responseGenerico !== null && responseGenerico !== undefined) {
@@ -355,7 +357,7 @@ export class CtrlactividadComponent implements OnInit {
       actividadNueva.LMarcaTiempoEjecucionEstimada = lMarcaTiempoEjecucionEstimada;
       actividadNueva.IPersonaAsignada = { ICodigo: this.selectedEmpleado };
       actividadNueva.IEstadoActividad = { ICodigo: this.selectedEstadoActividad, CDescripcion: '' };
-      let sToken = sessionStorage.getItem('sToken');
+      let sToken = this.gestionAuthService.obtenerToken();
       this.restActividadService.crearActividad(sToken, actividadNueva).subscribe(
         (responseGenerico: ResponseGenerico) => {
           if (responseGenerico !== null && responseGenerico !== undefined) {
