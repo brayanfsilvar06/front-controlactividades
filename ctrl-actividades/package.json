@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production --base-href '/CtrlActividades'",
+    "build": "ng build --base-href '/CtrlActividades'",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:ctrl-actividades": "node dist/ctrl-actividades/server/server.mjs"
