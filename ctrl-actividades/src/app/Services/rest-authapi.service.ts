@@ -1,7 +1,7 @@
 import { ResponseAuthApi } from './../Interfaces/Response/response-auth-api';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { RequestAuth } from '../Interfaces/Request/request-auth';
 
 @Injectable({
